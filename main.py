@@ -5,6 +5,8 @@ BASE_URL = "http://127.0.0.1:5000/"
 
 class Book:
     def __init__(self, title:str, author:str, ISBN:int):                # initialize book with attributes
+        if(type(title)!=str or type(author)!=str or type(ISBN)!=int):
+            raise TypeError("Object attributes type mismatch")
         self.title = title
         self.author = author
         self.ISBN = ISBN
@@ -13,38 +15,41 @@ class Book:
         print(json.dumps(self.__dict__, indent=4))
 
 class EBook(Book):
-    def __init__(self, title:str, author:str, ISBN:int, fileFormat:str):
+    def __init__(self, title:str, author:str, ISBN:int, file_format:str):
+        if(type(file_format)!=str):
+            raise TypeError("Object attributes type mismatch")
         super().__init__(title, author, ISBN)
-        self.fileFormat = fileFormat
+        self.file_format = file_format
     
 
 class Library():
     books = []
 
-    def addBook(self,book:Book):
-        self.books.append(book)
-    def addBook(self,book:EBook):
+    def add_book(self,book):
+        if(type(book)!=Book and type(book)!=EBook):
+            raise TypeError("Can add only books or ebooks")
         self.books.append(book)
 
-    def searchByTitle(self,title:str):
+
+    def search_by_title(self,title:str):
         for book in self.books:
             if (book.title==title):
                 return book
         return None
     
-    def displayBooks(self):
+    def display_books(self):
         print(json.dumps([book.__dict__ for book in self.books], indent=4))
 
 if __name__ == "__main__":
     book = Book("hi","hi",123)
     book1 = Book("hi1","hi1",1231)
     library = Library()
-    library.addBook(book)
-    library.addBook(book1)
+    library.add_book(book)
+    library.add_book(book1)
     ebook = EBook("hi2","hi2",1232,"hi2")
-    library.addBook(ebook)
-    bookSearched = library.searchByTitle("hi1")
-    bookSearched.info()
+    library.add_book(ebook)
+    book_searched = library.search_by_title("hi1")
+    book_searched.info()
     print()
-    library.displayBooks()
+    library.display_books()
 

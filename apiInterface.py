@@ -8,7 +8,7 @@ api = Api(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db = SQLAlchemy(app)
 
-class BookModel(db.Model):
+class BookModel(db.Model):                                      # database table (acts as library)
 	title = db.Column(db.String(100), nullable=False)
 	author = db.Column(db.String(100), nullable=False)
 	ISBN = db.Column(db.Integer, primary_key=True)
@@ -34,7 +34,7 @@ resource_fields = {
 }
 
 class BookEndpoint(Resource):
-	def get(self):
+	def get(self):                                              # get method to list all books in library
 		result = BookModel.query.all()
 		all_books = []
 		for i in result:
@@ -50,7 +50,7 @@ class BookEndpoint(Resource):
 	# 	return result
 
 	@marshal_with(resource_fields)
-	def put(self):
+	def put(self):                                              # put method to add Book, Book is passed as data 
 		args = request.form
 		# args = book_put_args.parse_args()
 		result = BookModel.query.filter_by( ISBN = args["ISBN"] ).first()
@@ -63,7 +63,7 @@ class BookEndpoint(Resource):
 		db.session.commit()
 		return book
 
-	def delete(self, book_ISBN):
+	def delete(self, book_ISBN):                                # delete method to delete a Book, Book ISBN is passed as an argument
 		book = BookModel.query.filter_by(ISBN = book_ISBN).first()
 		if(not book):
 			abort(409, message=f"Book {book_ISBN} not present in database")

@@ -12,7 +12,7 @@ class Book:
         self.ISBN = ISBN
         
     def info(self):                                                     # function to display book info
-        print(json.dumps(self.__dict__, indent=4))
+        print(json.dumps(self.__dict__, indent=4))                      # json form
 
     def to_json(self):
         return self.__dict__
@@ -34,13 +34,13 @@ class Library():
         self.books.append(book)
 
 
-    def search_by_title(self,title:str):
+    def search_by_title(self,title:str):                                # returns Book object if found else None
         for book in self.books:
             if (book.title==title):
                 return book
         return None
     
-    def display_books(self):
+    def display_books(self):                                            # json form
         print(json.dumps([book.__dict__ for book in self.books], indent=4))
 
 if __name__ == "__main__":

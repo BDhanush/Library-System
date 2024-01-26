@@ -71,7 +71,8 @@ class BookEndpoint(Resource):
 		db.session().commit()
 		return {"message" : f"Book {book_ISBN} deleted"}, 200
 
-
+# get and put method endpoint : "http://127.0.0.1:5000/BookEndpoint"
+# delete method endpoint : "http://127.0.0.1:5000/BookEndpoint/BookISBN"
 api.add_resource(BookEndpoint,"/BookEndpoint", "/BookEndpoint/<int:book_ISBN>")
 
 if __name__ == "__main__":

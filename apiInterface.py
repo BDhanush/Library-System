@@ -8,7 +8,7 @@ api = Api(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db = SQLAlchemy(app)
 
-class BookModel(db.Model):                                      # database table (acts as library)
+class BookModel(db.Model):                                      # database table for books (acts as library)
 	title = db.Column(db.String(100), nullable=False)
 	author = db.Column(db.String(100), nullable=False)
 	ISBN = db.Column(db.Integer, primary_key=True)
@@ -37,11 +37,11 @@ class BookEndpoint(Resource):
 	def get(self):                                              # get method to list all books in library
 		result = BookModel.query.all()
 		all_books = []
-		for i in result:
+		for i in result:										# representing books as lists to return
 			all_books.append( [i.title,i.author,i.ISBN] )
-			if ( i.file_format ):
-				all_books[-1].append( i.file_format )
-		return all_books
+			if ( i.file_format ):								
+				all_books[-1].append( i.file_format )			# if it's a ebook add file format as well
+		return all_books										# 2d list, list that contains book( in the form [title,author,ISBN,optional: file_format])
 	
 	# def get(self,book_title):
 	# 	result = BookModel.query.filter_by(title = book_title).first()
@@ -55,7 +55,7 @@ class BookEndpoint(Resource):
 		# args = book_put_args.parse_args()
 		result = BookModel.query.filter_by( ISBN = args["ISBN"] ).first()
 		
-		if result:
+		if result:												# if Book already in table
 			abort(409, message=f"Book {args["ISBN"]} already present")
 
 		book = BookModel( title=args["title"], author=args["author"], ISBN=args["ISBN"], file_format = args.get("file_format") )
@@ -65,7 +65,7 @@ class BookEndpoint(Resource):
 
 	def delete(self, book_ISBN):                                # delete method to delete a Book, Book ISBN is passed as an argument
 		book = BookModel.query.filter_by(ISBN = book_ISBN).first()
-		if(not book):
+		if(not book):											# if Book not present
 			abort(409, message=f"Book {book_ISBN} not present in database")
 		db.session.delete(book)
 		db.session().commit()

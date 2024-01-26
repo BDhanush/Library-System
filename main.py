@@ -5,7 +5,7 @@ BASE_URL = "http://127.0.0.1:5000/"
 
 class Book:
     def __init__(self, title:str, author:str, ISBN:int):                # initialize book with attributes
-        if(type(title)!=str or type(author)!=str or type(ISBN)!=int):
+        if(type(title)!=str or type(author)!=str or type(ISBN)!=int):   # if datatype of arguments isn't matched throw error
             raise TypeError("Object attributes type mismatch")
         self.title = title
         self.author = author
@@ -19,7 +19,7 @@ class Book:
 
 class EBook(Book):
     def __init__(self, title:str, author:str, ISBN:int, file_format:str):
-        if(type(file_format)!=str):
+        if(type(file_format)!=str):                                     # if datatype of arguments isn't matched throw error
             raise TypeError("Object attributes type mismatch")
         super().__init__(title, author, ISBN)
         self.file_format = file_format
@@ -35,7 +35,7 @@ class Library():
 
 
     def search_by_title(self,title:str):                                # returns Book object if found else None
-        for book in self.books:
+        for book in self.books:                                         # linear search
             if (book.title==title):
                 return book
         return None
@@ -43,7 +43,7 @@ class Library():
     def display_books(self):                                            # json form
         print(json.dumps([book.__dict__ for book in self.books], indent=4))
 
-if __name__ == "__main__":
+if __name__ == "__main__":                                              # testing
     book = Book("hi","hi",123)
     book1 = Book("hi1","hi1",1231)
     library = Library()
@@ -55,6 +55,8 @@ if __name__ == "__main__":
     # book_searched.info()
     # print()
     # library.display_books()
+
+    # sending requests to test api endpoint
     response_ebook = requests.put(BASE_URL + "BookEndpoint", ebook.to_json())
     print(response_ebook.json())
 
